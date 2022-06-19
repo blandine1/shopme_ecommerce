@@ -118,7 +118,7 @@ public class ProductController {
 			                  @RequestParam(name="imageIDs", required=false) String[] imageIDs,
 			                  @RequestParam(name="imageNames", required=false) String[] imageNames,
 			                  @AuthenticationPrincipal ShopmeUserDetails loggedUser) throws IOException {
-		
+		//System.out.println("//////////////////"+product.getDiscountPercent());
 		if(loggedUser.hasRole("Salesperson")) {
 			service.saveProductPrice(product);
 			

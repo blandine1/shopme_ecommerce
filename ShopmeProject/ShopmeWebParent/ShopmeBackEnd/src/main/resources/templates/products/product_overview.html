@@ -77,19 +77,19 @@
      <div class="form-group row">
          <label class="col-sm-1 col-form-label">Cost</label> 
          <div class="col-sm-11">
-           <input type="number" th:field="*{cost}" class="form-control" />
+           <input type="number"  step="0.01" th:field="*{cost}" class="form-control" />
          </div>   
       </div>
       <div class="form-group row">
          <label class="col-sm-1 col-form-label">price</label> 
          <div class="col-sm-11">
-           <input type="number" th:field="*{price}" class="form-control" />
+           <input type="number" step="0.01" th:field="*{price}"  class="form-control" />
          </div>   
       </div>
       <div class="form-group row">
          <label class="col-sm-1 col-form-label">Discount</label> 
          <div class="col-sm-11">
-           <input type="number" th:field="*{discountPercent}" class="form-control" />
+           <input type="number" step="0.01" th:field="*{discountPercent}"  class="form-control" />
          </div>   
       </div>
 </div>

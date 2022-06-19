@@ -18,6 +18,7 @@ public class MvcConfing implements WebMvcConfigurer {
 		exposeDirectory("../category-image", registry);
 		exposeDirectory("../brand-logo", registry);
 		exposeDirectory("../product-images", registry);
+		exposeDirectory("../site-logo", registry);
 			
 			/*//l'ancienne methode avant la refactorisation 
 			 * String brandLogoDirName = "../brand-logo"; 
