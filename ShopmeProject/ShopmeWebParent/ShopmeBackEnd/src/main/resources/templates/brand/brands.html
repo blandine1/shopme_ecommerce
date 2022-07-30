@@ -19,7 +19,7 @@
    <a th:href="@{/brands/csv}" class="fas fa-file-csv fa-2x icon-dark" title="exporter au format csv"></a>
 </div>
 
-<div th:replace="fragments :: search_form_and_message('/brands/page/1')"/>
+<div th:replace="fragments :: search_form_and_message"/>
 
 <div class="full-details">
     <table class="table table-striped table-bordered  table-hover">
@@ -27,7 +27,7 @@
           <tr>
               <th  class="hideable-column">Id</th>
               <th>logo</th>
-              <th th:replace="fragments :: column_link('/brands', 'name', 'Name', 'none')"/>
+              <th th:replace="fragments :: column_link('name', 'Name', 'none')"/>
               <th>categories</th>
               <th>actions</th>        
           </tr>
@@ -71,7 +71,7 @@
      </div>
 </div>
 
-<div th:replace="fragments :: pagination('/brands', 'brands')"></div>
+<div th:replace="fragments :: pagination('brands')"></div>
 
 <div th:replace="modal_fragments :: confirm_modal"/>
 

@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.shopme.admin.paging.PagingAndSortingHelper;
 import com.shopme.common.entity.Role;
 import com.shopme.common.entity.User;
 
@@ -39,15 +40,8 @@ public class UserServices {
 		return (List<User>) repository.findAll(Sort.by("firstName").ascending());
 	}
 
-	public Page<User> listByPage(int pageNum, String sortField, String sortDir, String keyword){
-		Sort sort = Sort.by(sortField);
-		sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
-		Pageable pageable = PageRequest.of(pageNum -1, USERS_PER_PAGE, sort);
-
-		if(keyword != null) {
-			return repository.findAll(keyword, pageable);
-		}
-		return repository.findAll(pageable);
+	public void listByPage(int pageNum, PagingAndSortingHelper helper){
+		helper.listEntities(pageNum, USERS_PER_PAGE, repository);
 	}
 
 	public List<Role> listRoles(){

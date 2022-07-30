@@ -61,6 +61,7 @@ public class CategoryController {
 		model.addAttribute("startCount", startCount);
 		model.addAttribute("endCount", endCount);
 		model.addAttribute("sortDir", sortDir);
+		model.addAttribute("moduleUrl", "/categories");
 		
 		model.addAttribute("listCategories", listCategories);
 

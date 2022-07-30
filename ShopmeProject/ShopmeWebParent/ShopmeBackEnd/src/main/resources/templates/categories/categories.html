@@ -20,7 +20,7 @@
 </div>
 
 
-<div th:replace="fragments :: search_form_and_message('/categories/page/1')"/>
+<div th:replace="fragments :: search_form_and_message"/>
 
 <div class="full-details">
    <table class="table table-striped table-hover table-bordered">
@@ -28,7 +28,7 @@
            <tr>
                <th>ID</th>
                <th>image</th>
-               <th th:replace="fragments :: column_link('/categories','name','Name','none')" />
+               <th th:replace="fragments :: column_link('name','Name','none')" />
                <th class="hideable-colunm">alias</th>
                <th>enabled</th>
                <th>actions</th>
@@ -79,11 +79,11 @@
 </div>
 
 <div th:if="${keyword != null}">
-   <div th:replace="fragments :: pagination('/categories', 'categories is not on hierarchical form')"/>
+   <div th:replace="fragments :: pagination('categories is not on hierarchical form')"/>
 </div>
 
 <div th:unless="${keyword != null}">
-   <div th:replace="fragments :: pagination('/categories', 'top-level categories')"/>
+   <div th:replace="fragments :: pagination('top-level categories')"/>
 </div>
 
 <div th:replace="modal_fragments :: confirm_modal"/>

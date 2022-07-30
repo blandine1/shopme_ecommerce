@@ -32,18 +32,19 @@
 			   </div>
 			</div>
 			
+	  <form id="formState">
 			<div class="form-group row m-2">
 			  <label class="col-sm-2 col-form-label" id="labelStateName">state or province</label>
 			  <div class="col-sm-6">
-			    <input type="text" id="fieldStateName" class="form-control"/>
+			    <input type="text" id="fieldStateName" class="form-control" required minlength="3" maxlength="15"/>
 			  </div>
 			  <div class="col-sm-4">
 			     <input type="button" id="buttonAddState" value="New" class="btn btn-primary mr-1" />
 			     <input type="button" id="buttonUpdateState" value="update" class="btn btn-secondary  ml-2" disabled />
 			     <input type="button" id="buttonDeleteState" value="delete" class="btn btn-secondary  ml-2" disabled />
 			  </div>
-			
-		</div>
+		 </div>
+	</form>
 </div>
 
 

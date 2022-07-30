@@ -1,22 +1,13 @@
 package com.shopme.admin.product;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,11 +18,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.shopme.admin.FileUploadUtil;
 import com.shopme.admin.brand.BrandService;
 import com.shopme.admin.category.CategoryService;
+import com.shopme.admin.paging.PagingAndSortingHelper;
+import com.shopme.admin.paging.PagingAndSortingParam;
 import com.shopme.admin.security.ShopmeUserDetails;
 import com.shopme.common.entity.Brand;
 import com.shopme.common.entity.Category;
 import com.shopme.common.entity.Product;
-import com.shopme.common.entity.ProductImage;
 import com.shopme.common.exception.ProductNotFountException;
 
 @Controller
@@ -50,44 +42,23 @@ public class ProductController {
 	
 	@GetMapping("/products")
 	public String listFirstPage(Model model) {
-		
-		return listByPage(1, model, "name", "asc", null, 0);
+		return "redirect:/products/page/1?sortField=name&sortDir=asc&categoryId=0";
 	}
 	
 	@GetMapping("/products/page/{pageNum}")
-	public String listByPage(@PathVariable("pageNum") int pageNum, Model model,
-			                 @Param("sortField") String sortField, @Param("sortDir") String sortDir,
-			                 @Param("keyword") String keyword,
+	public String listByPage(@PagingAndSortingParam(listName ="listProducts", moduleUrl="/products" ) PagingAndSortingHelper helper,
+			                 @PathVariable("pageNum") int pageNum, Model model,
 			                 @Param("categoryId") Integer categoryId
 			                 ) {
 		
 		System.out.println("seletcted Id category " +categoryId);
-		Page<Product> page = service.listByPage(pageNum, sortField, sortDir, keyword, categoryId);
-		List<Product> listProducts = page.getContent();
+		service.listByPage(pageNum, helper, categoryId);
 		
 		List<Category> listCategories = categoryService.listCategoriesUsedInForm();
 		
-		long startCount = (pageNum - 1) * ProductService.PRODUCT_PER_PAGE + 1;
-		long endCount = startCount + ProductService.PRODUCT_PER_PAGE + 1;
-		if(endCount > page.getTotalElements()) {
-			endCount = page.getTotalElements();
-		}
-		
 		if(categoryId != null) model.addAttribute("categoryId", categoryId);
-		
-       String reverseSortDir = sortDir.equals("asc") ? "desc" : "asc";
-		
-		model.addAttribute("currentPage", pageNum);
-		model.addAttribute("totalPages", page.getTotalPages());
-		model.addAttribute("startCount", startCount);
-		model.addAttribute("endCount", endCount);
-		model.addAttribute("totalItems", page.getTotalElements());
-		model.addAttribute("sortField", sortField);
-		model.addAttribute("sortDir", sortDir);
-		model.addAttribute("keyword", keyword);
-		model.addAttribute("listProducts", listProducts);
-		model.addAttribute("reverseSortDir", reverseSortDir);
 		model.addAttribute("listCategories", listCategories);
+		
 		
 		return "products/products";
 	}
@@ -119,13 +90,14 @@ public class ProductController {
 			                  @RequestParam(name="imageNames", required=false) String[] imageNames,
 			                  @AuthenticationPrincipal ShopmeUserDetails loggedUser) throws IOException {
 		//System.out.println("//////////////////"+product.getDiscountPercent());
-		if(loggedUser.hasRole("Salesperson")) {
-			service.saveProductPrice(product);
-			
-		    attributes.addFlashAttribute("message", "product has been saved successfully");
-				
-		    return "redirect:/products";
-		}
+		
+		if(!loggedUser.hasRole("Admin") && !loggedUser.hasRole("Editor")) {
+		   if(loggedUser.hasRole("Salesperson")) {
+			  service.saveProductPrice(product);
+		      attributes.addFlashAttribute("message", "product has been saved successfully");
+		      return "redirect:/products";
+		    }
+		 }
 		
 		ProductSaveHelper.setMainImageName(mainImageMultiPart, product);
 		ProductSaveHelper.setExistingExtraImageNames(imageIDs, imageNames, product);
@@ -179,16 +151,26 @@ public class ProductController {
 	}
 	
 	@GetMapping("/products/edit/{id}")
-	public String editProduct(@PathVariable(name = "id") Integer id, Model model, RedirectAttributes attributes)  {
+	public String editProduct(@PathVariable(name = "id") Integer id, Model model,
+			@AuthenticationPrincipal ShopmeUserDetails loggedUser
+			, RedirectAttributes attributes)  {
 		try {
 			Product product = service.get(id);
 			
 			model.addAttribute("product", product);
 			model.addAttribute("pageTitle", "editing product ID " + id);
 			Integer numberOfExistingExtraImage = product.getImages().size();
-			 //System.out.println("numberOfExistingExtraImage "+numberOfExistingExtraImage);
-			//recuperer la liste des brands
+			
 			Iterable<Brand> listBrands = brandService.listAll();
+			boolean isReadOnlyForSaleSperson = false;
+			
+			if(!loggedUser.hasRole("Admin") && !loggedUser.hasRole("Editor")) {
+				   if(loggedUser.hasRole("Salesperson")) {
+					 isReadOnlyForSaleSperson = true;
+				    }
+				 }
+			
+			model.addAttribute("isReadOnlyForSaleSperson", isReadOnlyForSaleSperson);
 			model.addAttribute("listBrands", listBrands);
 			model.addAttribute("numberOfExistingExtraImage", numberOfExistingExtraImage);
 			

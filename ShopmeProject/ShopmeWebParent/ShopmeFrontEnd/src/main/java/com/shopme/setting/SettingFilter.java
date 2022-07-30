@@ -34,13 +34,14 @@ public class SettingFilter implements Filter {
 			return;
 		}
 		
-		List<Setting> settings = service.getGeneralSetting();
-		settings.forEach(setting ->{
-			
-			System.out.println(setting);
-			
-			request.setAttribute(setting.getKey(), setting.getValue());
-		});
+		
+		  List<Setting> settings = service.getGeneralSetting();
+		  settings.forEach(setting ->{
+		  
+		         request.setAttribute(setting.getKey(), setting.getValue());
+		         System.out.println(setting.getKey() + "==>"+ setting.getValue());
+		  });
+		 
 		
 		chain.doFilter(request, response);
 	}

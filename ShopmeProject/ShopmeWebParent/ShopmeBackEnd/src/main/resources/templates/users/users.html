@@ -19,26 +19,26 @@
 </div>
 
 
-<div th:replace="fragments :: search_form_and_message('/users/page/1')"/>
+<div th:replace="fragments :: search_form_and_message"/>
 
 <div class="full-details">
     <table class="table table-striped table-hover table-bordered">
          <thead class="thead-dark">
          <tr>
             <th class="hideable-column">
-              <th th:replace="fragments :: column_link('/users','id', 'ID', 'tag')" />
+              <th th:replace="fragments :: column_link('id', 'ID', 'tag')" />
             </th>
             
            <th>photos</th>
            
            <th class="hideable-column">
-             <th th:replace="fragments :: column_link('/users', 'email', 'Email', 'tag')" />
+             <th th:replace="fragments :: column_link('email', 'Email', 'tag')" />
            </th>
              
-           <th th:replace="fragments :: column_link('/users', 'firstName', 'First Name', 'none')" />
-           <th th:replace="fragments :: column_link('/users', 'lastName', 'Last Name', 'none')" />
+           <th th:replace="fragments :: column_link('firstName', 'First Name', 'none')" />
+           <th th:replace="fragments :: column_link('lastName', 'Last Name', 'none')" />
            <th>roles</th>
-           <th th:replace="fragments :: column_link('/users', 'enabled', 'Satut', 'none')" />
+           <th th:replace="fragments :: column_link('enabled', 'Satut', 'none')" />
            <th>actions</th>
            </tr>
          </thead>
@@ -89,7 +89,7 @@
 </div>
   
 
-<div th:replace="fragments :: pagination('/users', 'users')"/>
+<div th:replace="fragments :: pagination('users')"/>
 
 <div th:replace="modal_fragments :: confirm_modal"/>
 

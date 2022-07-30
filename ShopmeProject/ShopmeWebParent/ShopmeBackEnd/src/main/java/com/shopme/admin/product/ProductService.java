@@ -8,12 +8,10 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.shopme.common.entity.Brand;
+import com.shopme.admin.paging.PagingAndSortingHelper;
 import com.shopme.common.entity.Product;
 import com.shopme.common.exception.ProductNotFountException;
 
@@ -28,27 +26,29 @@ public class ProductService {
 		return (List<Product>) repository.findAll();
 	}
 	
-	public Page<Product> listByPage(int pageNum, String sortField,String sortDir ,String keyword, Integer categoryId){
-		Sort sort = Sort.by(sortField);
+	public void listByPage(int pageNum, PagingAndSortingHelper helper, Integer categoryId){
+		Pageable pageable = helper.createPageable(PRODUCT_PER_PAGE, pageNum );
+		String keyword = helper.getKeyword();
 		
-		sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
-		
-		Pageable pageable = PageRequest.of(pageNum -1,PRODUCT_PER_PAGE, sort);
+		Page<Product> page= null;
 		
 		if(keyword != null && !keyword.isEmpty()){
 			if(categoryId != null && categoryId > 0) {
-				String categoryMatch = "-"+String.valueOf(categoryId).concat("-");
-				return repository.searchInCategory(categoryId, categoryMatch, keyword, pageable);
+				String categoryMatch = "-"+ String.valueOf(categoryId)+ "-";
+				page =  repository.searchInCategory(categoryId, categoryMatch, keyword, pageable);
+			}else {
+				page = repository.findAll(keyword ,pageable);
 			}
-			return repository.findAll(keyword ,pageable);
+		}else {
+			if(categoryId != null && categoryId > 0) {
+				String categoryMatch = "-" +String.valueOf(categoryId)+ "-";
+			    page = repository.findAllInCtegory(categoryId, categoryMatch, pageable);
+		    }else {
+		    	page = repository.findAll(pageable);
+		    }
 		}
 		
-		if(categoryId != null && categoryId > 0) {
-			String categoryMatch = "-"+String.valueOf(categoryId).concat("-");
-			return repository.findAllInCtegory(categoryId, categoryMatch, pageable);
-		}
-		
-		return repository.findAll(pageable);
+		helper.updateModelAttributes(pageNum, page);
 	}
 	
 	public Product save(Product product) {
@@ -68,7 +68,7 @@ public class ProductService {
 	
 	public void saveProductPrice(Product productInform) {
 		Product productInDb = repository.findById(productInform.getId()).get();
-		productInDb.setCost(productInform.getId());
+		productInDb.setCost(productInform.getCost());
 		productInDb.setPrice(productInform.getPrice());
 		productInDb.setDiscountPercent(productInform.getDiscountPercent());
 		

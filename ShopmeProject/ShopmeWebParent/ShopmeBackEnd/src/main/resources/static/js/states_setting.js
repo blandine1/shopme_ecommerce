@@ -47,6 +47,8 @@ $(document).ready(function(){
 });
 
  function updateState(){
+	if(!validateFormState()) return;
+	
 	url = contextPath + "states/save";
 	stateId = dropdownStates.val();
 	stateName = fieldStateName.val();
@@ -93,7 +95,19 @@ function deleteState(){
 	});
 }
 
+function validateFormState(){
+	formState = document.getElementById("formState");
+	if(!formState.checkValidity()){
+		formState.reportValidity();
+		return false;
+	}
+	return true;
+}
+
  function addState(){
+	
+	if(!validateFormState()) return;
+	
 	url = contextPath + "states/save";
 	selectedCountry = $("#dropdownCountriesForState option:selected");
 	countryId = selectedCountry.val();

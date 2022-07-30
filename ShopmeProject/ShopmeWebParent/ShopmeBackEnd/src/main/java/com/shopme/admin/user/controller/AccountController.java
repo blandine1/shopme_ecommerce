@@ -33,7 +33,7 @@ public class AccountController {
 
 		 return "users/account_form";
 	}
-
+ 
 	@PostMapping("/account/update")
 	public String saveAccountDetails(User user, RedirectAttributes attributes, @RequestParam("image") MultipartFile multipartFile,
 			@AuthenticationPrincipal ShopmeUserDetails loggedUser) throws IOException {

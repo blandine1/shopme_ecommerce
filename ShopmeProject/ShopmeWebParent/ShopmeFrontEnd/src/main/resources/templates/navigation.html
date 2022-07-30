@@ -23,7 +23,7 @@
                <a class="nav-link" href="">Shipping &nbsp; Delivery</a>
             </li>
              <li class="nav-item">
-               <a class="nav-link" href="">Login</a>
+               <a class="nav-link" th:href="@{/login}">Login</a>
             </li>
             <li class="nav-item">
                <a class="nav-link" th:href="@{/register}">register</a>
@@ -39,6 +39,13 @@
 
 <div th:fragment="search_nav" class="row">
    <div class="col-md">
+   
+   <th:block sec:authorize="isAuthenticated()">
+   <form th:action="@{/logout}" method="post" th:hidden="true" name="logoutForm">
+      <input type="submit" name="logout">
+   </form>
+   </th:block>
+   
       <nav class="navbar navbar-expand-sm bg-ligth ">
           <div class="collapse navbar-collapse" id="searchNavbar">
              <form th:action="@{/search}" method="get" class="form-inline">
@@ -46,6 +53,32 @@
                  th:value="${keyword}"  placeholder="enter your keyword" required />
                 <input type="submit" value="search" class="btn btn-outline-success" />
              </form>
+             <ul class="navbar-nav">
+             <th:block sec:authorize="isAuthenticated()">
+                <li class="nav-item">
+                  <b> <a class="nav-link" th:href="@{/account_details}" sec:authentication="principal.fullName"></a></b>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="">Address</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="">Questions</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="">Reviews</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="">Orders</a>
+                </li>
+                 <li class="nav-item">
+                  <a class="nav-link fas fa-shopping-cart fa-2x" th:href="@{/cart}"></a>
+                </li>
+                
+                 <li class="nav-item">
+                  <a class="nav-link" href="javascript: document.logoutForm.submit()">Logout</a>
+                </li>
+               </th:block>
+             </ul>
           </div>
       </nav>
    </div>

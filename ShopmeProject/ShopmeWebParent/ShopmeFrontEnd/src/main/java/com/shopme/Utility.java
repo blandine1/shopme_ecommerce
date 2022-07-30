@@ -5,12 +5,14 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.security.authentication.RememberMeAuthenticationToken;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 
+import com.shopme.security.oauth.CustomerOauth2User;
 import com.shopme.setting.EmailSettingBag;
 
 public class Utility {
-
-	
 	public static String getSiteUrl(HttpServletRequest request) {
 		String siteUrl = request.getRequestURL().toString(); 
 		
@@ -33,4 +35,23 @@ public class Utility {
 		
 		return mailSender;
 	}
+	
+	public static String getEmailOfAuthenticatedCustomer(HttpServletRequest request) {
+		 Object principal = request.getUserPrincipal();
+		 if(principal == null) return null;
+		 String customerEmail = null;
+		 //a ce niveau si le user se connecte avec son userName et  le rememberMe option
+		 if(principal instanceof UsernamePasswordAuthenticationToken || principal instanceof RememberMeAuthenticationToken ) {
+			 customerEmail = request.getUserPrincipal().getName();
+		 }else if(principal instanceof OAuth2AuthenticationToken){
+			 OAuth2AuthenticationToken oAuth2Token = (OAuth2AuthenticationToken) principal;
+			 CustomerOauth2User oauth2User = (CustomerOauth2User) oAuth2Token.getPrincipal();
+			 customerEmail = oauth2User.getEmail();
+		 }
+		 
+		 return customerEmail;
+	}
+	
 }
+
+

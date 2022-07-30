@@ -23,12 +23,12 @@ public class EmailSettingBag extends SettingBag {
 		return super.getValue("MAIL_USERNAME");
 	}
 	
-	public String getSmtpAuth() {
-		return super.getValue("SMTP_AUTH");
-	}
-	
 	public String getPassword() {
 		return super.getValue("MAIL_PASSWORD");
+	}
+	
+	public String getSmtpAuth() {
+		return super.getValue("SMTP_AUTH");
 	}
 	
 	public String getSmtpSecured() {
