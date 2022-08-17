@@ -1,4 +1,4 @@
-package com.shopme.common.entity;
+package com.shopme.common.entity.product;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,13 +10,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.shopme.common.entity.IdBaseEntity;
+
 @Entity
 @Table(name = "product_images")
-public class ProductImage {
+public class ProductImage extends IdBaseEntity{
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
 	
 	@Column(nullable = false)
 	private String name;
@@ -42,15 +41,6 @@ public class ProductImage {
 	}
 
 	//getter and setter
-	public int getId() {
-		return id;
-	}
-
-	
-
-	public void setId(int id) {
-		this.id = id;
-	}
 
 	public String getName() {
 		return name;

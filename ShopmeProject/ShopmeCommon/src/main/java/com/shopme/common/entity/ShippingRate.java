@@ -4,20 +4,14 @@ import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "shipping_rates")
-public class ShippingRate {
+public class ShippingRate extends IdBaseEntity{
 
-   @Id
-   @GeneratedValue(strategy = GenerationType.IDENTITY)
-   private Integer id;
    private float rate;
    private int days;
    @Column(name = "cod_supported")
@@ -31,18 +25,6 @@ public class ShippingRate {
    private String state;
    
 public ShippingRate() {
-}
-
-
-
-public Integer getId() {
-	return id;
-}
-
-
-
-public void setId(Integer id) {
-	this.id = id;
 }
 
 public float getRate() {
@@ -60,7 +42,7 @@ public int getDays() {
 public void setDays(int days) {
 	this.days = days;
 }
-
+ 
 public boolean isCodeSupported() {
 	return codeSupported;
 }

@@ -44,7 +44,7 @@ public class ShippingRateController {
 	     model.addAttribute("listCountries", listCountries);
 	     model.addAttribute("pageTItle", "new rate");
 	     
-	     return "/shipping_rates/shipping_rates_form";
+	     return "/shipping_rates/shipping_rate_form";
 	}
 	
 	@PostMapping("/shipping_rates/save")
@@ -58,7 +58,7 @@ public class ShippingRateController {
 		return defaultRedirectUrl;
 	}
 	
-	@PostMapping("/shipping_rates/edit/{id}")
+	@GetMapping("/shipping_rates/edit/{id}")
 	public String editRate(@PathVariable("id")Integer id, RedirectAttributes attributes, Model model) {
 		try {
 			ShippingRate rate = rateSrvice.get(id);
@@ -66,9 +66,9 @@ public class ShippingRateController {
 		     
 		     model.addAttribute("rate", rate);
 		     model.addAttribute("listCountries", listCountries);
-		     model.addAttribute("pageTItle", "editing rate ID : "+id);
+		     model.addAttribute("pageTitle", "editing rate ID : "+id);
 		     
-		     return "/shipping_ratee/shipping_rate_form";
+		     return "/shipping_rates/shipping_rate_form";
 		} catch (ShippingRateAllReadyExistException e) {
 			attributes.addFlashAttribute("message", e.getMessage());
 			 return defaultRedirectUrl;

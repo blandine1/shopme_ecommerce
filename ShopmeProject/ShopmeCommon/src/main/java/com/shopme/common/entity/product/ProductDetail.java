@@ -1,21 +1,16 @@
-package com.shopme.common.entity;
+package com.shopme.common.entity.product;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.shopme.common.entity.IdBaseEntity;
+
 @Entity
 @Table(name = "product_details")
-public class ProductDetail {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+public class ProductDetail extends IdBaseEntity{
 	
 	@Column(nullable = false, length = 255)
 	private String name;
@@ -47,13 +42,7 @@ public class ProductDetail {
 		this.product = product;
 	}
 
-	public int getId() {
-		return id;
-	}
 
-	public void setId(int id) {
-		this.id = id;
-	}
 
 	public String getName() {
 		return name;

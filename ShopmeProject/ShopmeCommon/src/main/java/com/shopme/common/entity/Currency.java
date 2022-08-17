@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "currencies")
-public class Currency {
+public class Currency extends IdBaseEntity{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,14 +33,7 @@ public class Currency {
 	}
 	
 	//getter and setter
-	
-	public Integer getId() {
-		return id;
-	}
-	
-	public void setId(Integer id) {
-		this.id = id;
-	}
+
 	public String getName() {
 		return name;
 	}

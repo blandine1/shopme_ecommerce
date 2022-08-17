@@ -6,9 +6,6 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -18,11 +15,8 @@ import javax.persistence.Transient;
 
 @Entity
 @Table(name = "categories")
-public class Category {
+public class Category extends IdBaseEntity{
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
 
 	@Column(unique = true, length = 128, nullable = false)
 	private String  name;
@@ -109,14 +103,6 @@ public class Category {
 		this.id = id;
 		this.name = name;
 		this.alias = alias;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
 	}
 
 	public String getName() {

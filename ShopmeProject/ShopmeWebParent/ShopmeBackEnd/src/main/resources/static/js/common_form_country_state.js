@@ -4,7 +4,7 @@ var dropdowCountries;
 
 $(document).ready(function(){
     dropdowCountries= $("#country");
-    dropdownStates = $("listStates");
+    dropdownStates = $("#listStates");
     
 	dropdowCountries.on("change", function(){
 		loadState4Country();

@@ -110,12 +110,20 @@ public class CustomerController {
 	public String updateAccountDetails(Model model, Customer customer, RedirectAttributes attributes, HttpServletRequest request) {
 		
 		customerService.updateCustomer(customer);
+		attributes.addFlashAttribute("message", "mise a jour effectuée avec succes");
 		
 		updateNameForAuthenticatedCustomer(customer, request);
 		
-		attributes.addFlashAttribute("message", "mise a jour effectuée avec succes");
+		String redirectOption = request.getParameter("redirect");
+		String redirectUrl = "redirect:/account_details";
 		
-		return "redirect:/account_details";
+		if("address_book".equals(redirectOption)) {
+			redirectUrl = "redirect:/address_book";
+		}else if("cart".equals(redirectOption)) {
+			redirectUrl = "redirect:/cart";
+		}
+		
+		return redirectUrl;
 	}
 
 	private void updateNameForAuthenticatedCustomer(Customer customer,HttpServletRequest request) {
