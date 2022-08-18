@@ -32,9 +32,9 @@
                            <th:block  th:if="${isPrimaryAddressAsDefault}">
                              <span class="text-danger">[default]</span>
                            </th:block>
-                           <th:block  th:unless="${isPrimaryAddressAsDefault}">
+                           <th:block  th:unless="${isPrimaryAddressAsDefault}" th:with="p =${param.redirect}">
                              <a th:unless="${param.redirect}" th:href="@{'/address_book/default/0'}">[set as default]</a>
-                             <a th:if="${param.redirect}" th:href="@{'/address_book/default/0?redirect=' +${param.redirect}}">[set as default]</a>
+                             <a th:if="${p}" th:href="@{'/address_book/default/0?redirect=' +${p}}">[set as default]</a>
                            </th:block>
                            
                          </div>
@@ -63,8 +63,9 @@
                            <th:block  th:if="${address.defaultForShipping}">
                              <span class="text-danger">[default]</span>
                            </th:block>
-                           <th:block  th:unless="${address.defaultForShipping}">
-                             <a th:href="@{'/address_book/default/' +${address.id}}">[set as default]</a>
+                           <th:block  th:unless="${address.defaultForShipping}" th:with="p =${param.redirect}">
+                             <a th:unless="${p}" th:href="@{'/address_book/default/' +${address.id}}">[set as default]</a>
+                             <a th:if="${p}" th:href="@{'/address_book/default/' +${address.id}} + '?redirect=' + ${p}">[set as default]</a>
                            </th:block>
                            
                          </div>
