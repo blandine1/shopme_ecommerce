@@ -9,25 +9,28 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.shopme.admin.country.CountryRepository;
 import com.shopme.admin.paging.PagingAndSortingHelper;
 import com.shopme.admin.paging.PagingAndSortingParam;
 import com.shopme.admin.setting.SettingService;
+import com.shopme.common.entity.Country;
 import com.shopme.common.entity.order.Order;
 import com.shopme.common.entity.setting.Setting;
 
 @Controller
 public class OrderController {
 	
-	private String dfaultRedirectUrl = "redirect:/orders/page/1?sortField=orderTime&sortDir=desc";
+	private String defaultRedirectUrl = "redirect:/orders/page/1?sortField=orderTime&sortDir=desc";
 	
 	@Autowired private OrderService orderService;
 	@Autowired private SettingService settingService;
 	
 	@GetMapping("/orders")
 	public String listFirstPage() {
-		return dfaultRedirectUrl;
+		return defaultRedirectUrl;
 	}
 	
 	@GetMapping("/orders/page/{pageNum}")
@@ -42,6 +45,7 @@ public class OrderController {
 		
 	}
 	
+	
 	@GetMapping("/orders/detail/{id}")
 	public String viewDetails(@PathVariable("id")Integer id, Model model, HttpServletRequest request, RedirectAttributes attributes) {
 		
@@ -53,7 +57,7 @@ public class OrderController {
 			return "orders/order_details_modal";
 		} catch (OrderNotFoundException e) {
 			attributes.addFlashAttribute("message", e.getMessage());
-			return dfaultRedirectUrl;
+			return defaultRedirectUrl;
 		}
 	}
 	
@@ -66,7 +70,25 @@ public class OrderController {
 			attributes.addFlashAttribute("message", e.getMessage());
 		}
 		
-		return dfaultRedirectUrl;
+		return defaultRedirectUrl;
+	}
+	
+	@GetMapping("/orders/edit/{id}")
+	public String editOrder(@PathVariable("id") Integer id,HttpServletRequest request,Model model, RedirectAttributes attributes) {
+		try {
+			Order order = orderService.get(id);
+			List<Country> listCountries = orderService.listAllCountries();
+			
+			model.addAttribute("order", order);
+			model.addAttribute("pageTitle", "Editing Order ID "+order.getId());
+			model.addAttribute("listCountries", listCountries);
+			
+			return "orders/order_form";
+		} catch (OrderNotFoundException e) {
+			attributes.addFlashAttribute("message", e.getMessage());
+		}
+		
+		return defaultRedirectUrl;
 	}
 
 	private void loadCurrencySetting(HttpServletRequest request) {

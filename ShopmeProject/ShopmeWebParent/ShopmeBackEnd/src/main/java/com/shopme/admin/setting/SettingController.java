@@ -52,6 +52,8 @@ public class SettingController {
 		
 		saveSiteLogo(multipartFile, settingBag);
 		saveCurrencySymbol(request, settingBag);
+		
+       
 		updateSettingValuesFromForm(request, settingBag.list());
 		
 		attributes.addFlashAttribute("message", "general setting has been saved");
@@ -75,11 +77,23 @@ public class SettingController {
 	//on enreritre l(initial de la monaie
 	private void saveCurrencySymbol(HttpServletRequest request, GeneralSettingBag settingBag) {
 		Integer currencyId = Integer.parseInt(request.getParameter("CURRENCY_ID"));
+		
 		Optional<Currency> findByIDResult = currencyRepository.findById(currencyId);
+		
 		if (findByIDResult.isPresent()) {
 			Currency currency = findByIDResult.get();
 			settingBag.updateCurrencySymmbolValue(currency.getSymbol());
 		}
+	}
+	
+	@PostMapping("settings/save_payment")
+	public String savePamentSettings(Model model, HttpServletRequest request, RedirectAttributes attributes) {
+		List<Setting> paymentSettings = settingService.getPaymentSetting();
+		updateSettingValuesFromForm(request, paymentSettings);
+		
+		attributes.addFlashAttribute("message", "payment have been saved");
+		
+		return "redirect:/settings#payment";
 	}
 	
 	private void updateSettingValuesFromForm(HttpServletRequest request, List<Setting> listSetting) {

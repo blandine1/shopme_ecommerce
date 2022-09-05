@@ -51,6 +51,15 @@ public class ProductService {
 		helper.updateModelAttributes(pageNum, page);
 	}
 	
+	public void searchProducts(int pageNum, PagingAndSortingHelper helper) {
+		Pageable pageable = helper.createPageable(PRODUCT_PER_PAGE, pageNum );
+		String keyword = helper.getKeyword();
+		
+		Page<Product> page = repository.searchProductByName(keyword, pageable);
+		
+		helper.updateModelAttributes(pageNum, page);
+	}
+	
 	public Product save(Product product) {
 		product.setCreatedTime(new Date());
 		

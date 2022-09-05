@@ -11,9 +11,7 @@ import javax.persistence.Table;
 @Table(name = "currencies")
 public class Currency extends IdBaseEntity{
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+
 	@Column(nullable = false, length = 64)
 	private String name; 
 	@Column(nullable = false, length = 3)
@@ -25,7 +23,10 @@ public class Currency extends IdBaseEntity{
 	public Currency() {
 		
 	}
-	
+	public Currency(Integer id) {
+		this.id = id;
+	}
+
 	public Currency(String name, String symbol, String code) {
 		this.name = name;
 		this.symbol = symbol;
@@ -55,7 +56,7 @@ public class Currency extends IdBaseEntity{
 
 	@Override
 	public String toString() {
-		return name + " - "+ code + " - " + symbol;
+		return  name + " - "+ code + " - " + symbol;
 	}
 	
 	

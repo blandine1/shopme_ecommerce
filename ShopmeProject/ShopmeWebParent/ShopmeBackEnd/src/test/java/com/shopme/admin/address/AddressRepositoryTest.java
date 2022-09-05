@@ -23,6 +23,11 @@ public class AddressRepositoryTest {
 	@Autowired private TestEntityManager entityManager;
 	
 	@Test
+	public void empty() {
+		
+	}
+	
+	@Test
 	public void testCreateAddress() {
 		Customer customer = entityManager.find(Customer.class, 2);
 		Country countryId = entityManager.find(Country.class, 1);

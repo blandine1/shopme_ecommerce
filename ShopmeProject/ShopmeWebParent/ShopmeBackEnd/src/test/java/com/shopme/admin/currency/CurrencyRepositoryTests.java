@@ -43,7 +43,7 @@ public class CurrencyRepositoryTests {
 		List<Currency> findAllByOrderByNameAsc = repository.findAllByOrderByNameAsc();
 		
 		findAllByOrderByNameAsc.forEach(c ->{
-			System.out.println(c);
+			System.out.println(c.getId());
 		});
 		
 		assertThat(findAllByOrderByNameAsc).size().isGreaterThan(0);

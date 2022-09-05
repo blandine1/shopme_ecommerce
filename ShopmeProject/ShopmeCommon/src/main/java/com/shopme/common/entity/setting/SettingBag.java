@@ -13,9 +13,7 @@ public class SettingBag {
 	//on recupere un setting a partir du key
 	public Setting get(String key) {
 		int index = listSettings.indexOf(new Setting(key));
-		
-		System.out.println("la valeur de l'index : " +index);
-		
+		 
 		if(index >=0) {
 			return listSettings.get(index);
 		}

@@ -52,7 +52,7 @@ public class ShippingRateController {
 		try {
 			rateSrvice.save(rate);
 			attributes.addFlashAttribute("message", "the shipping rate has been saved successfully");
-		} catch (ShippingRateAllReadyExistException e) {
+		} catch (ShippingRateNotFoundException e) {
 			attributes.addFlashAttribute("message", e.getMessage());
 		}
 		return defaultRedirectUrl;
@@ -69,7 +69,7 @@ public class ShippingRateController {
 		     model.addAttribute("pageTitle", "editing rate ID : "+id);
 		     
 		     return "/shipping_rates/shipping_rate_form";
-		} catch (ShippingRateAllReadyExistException e) {
+		} catch (ShippingRateNotFoundException e) {
 			attributes.addFlashAttribute("message", e.getMessage());
 			 return defaultRedirectUrl;
 		}
@@ -81,7 +81,7 @@ public class ShippingRateController {
 			rateSrvice.updateCODSupport(id, supported);
 			
 			attributes.addFlashAttribute("message", "COD support for shippingRate id : "+id+" has been "+ supported);
-		} catch (ShippingRateAllReadyExistException e) {
+		} catch (ShippingRateNotFoundException e) {
 			attributes.addFlashAttribute("message", e.getMessage());
 		}
 		 return defaultRedirectUrl;

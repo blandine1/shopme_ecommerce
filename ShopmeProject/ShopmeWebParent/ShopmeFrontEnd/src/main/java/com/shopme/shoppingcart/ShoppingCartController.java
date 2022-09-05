@@ -15,7 +15,6 @@ import com.shopme.common.entity.Address;
 import com.shopme.common.entity.CartItem;
 import com.shopme.common.entity.Customer;
 import com.shopme.common.entity.ShippingRate;
-import com.shopme.customer.CustomerNotFoundException;
 import com.shopme.customer.CustomerService;
 import com.shopme.shipping.ShippingRateService;
 

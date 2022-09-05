@@ -99,6 +99,8 @@ function updateCountry(){
 		showToastMessage("country "+ countryName +" has been updated");
 		
 		changeFormStateToNew();
+	}).fail(function(){
+		showToastMessage("ERROR : could not connect to server or the server encountered an error while processing your request");
 	});
 }
 

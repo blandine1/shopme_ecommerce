@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org">
+
+<head>
+   <head th:replace="fragments :: page_head(${pageTitle},'tag')"/>
+   <link rel="stylesheet" th:href="@{/richText/richtext.min.css}" />
+   <script th:src="@{/richText/jquery.richtext.min.js}"></script>
+</head>
+<body>
+
+<div th:replace="navigation :: menu"></div>
+
+<div class="container-fluid">
+
+<div class="pt-3 ml-3">
+  <h2> manage Product | [[${pageTitle}]]</h2>
+</div>
+
+<div>
+   <form th:action="@{/orders/save}" method="post" th:object="${order}"  onsubmit="return checkUnique(this)" enctype="multipart/form-data">
+    <input type="hidden" th:field="*{id}" />
+    
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+		  <li class="nav-item">
+		    <a class="nav-link active" id="overview-tab" data-toggle="tab" href="#overview" role="tab">Overview</a>
+		  </li>
+		  <li class="nav-item">
+		    <a class="nav-link" id="products-tab" data-toggle="tab" href="#products" role="tab">Product</a>
+		  </li>
+		  <li class="nav-item">
+		    <a class="nav-link" id="shipping-tab" data-toggle="tab" href="#shipping" role="tab">Shipping</a>
+		  </li>
+		   <li class="nav-item">
+		    <a class="nav-link" id="track-tab" data-toggle="tab" href="#track" role="tab">Track</a>
+		  </li>
+		</ul>
+
+<!-- Tab panes -->
+    <div class="tab-content" id="myTabContent">
+      <div class="tab-pane fade show active p-3" id="overview" role="tabpanel" >
+        <div th:replace="orders/order_form_overview :: content"></div>
+      </div>
+  
+      <div class="tab-pane" id="products" role="tabpanel" >
+        <div th:replace="orders/order_form_products :: content"></div>
+      </div>
+  
+      <div class="tab-pane p-3" id="shipping" role="tabpanel" >
+        <div th:replace="orders/order_form_shipping :: content"></div>
+      </div>
+  
+       <div class="tab-pane p-3" id="track" role="tabpanel" >
+        <h2>Edit Order Tracking</h2>
+       </div>
+   
+     </div>
+ <div class="text-center m-2">
+      <input type="submit" value="submit" class="btn btn-primary" />
+      &nbsp;
+      <input type="button" value="cancel" class="btn btn-secondary" id="buttonCAncel"/>
+   </div>
+</form>
+   
+   <div th:replace="modal_fragments :: modal_dialog"></div>
+   <div th:replace="orders/add_product_modal :: content"></div>
+
+   <div th:replace="fragments :: footer"></div>
+</div>
+</div>
+
+<script type="text/javascript">
+
+ contextPath = "[[@{/}]]";
+ 
+  var csrfHeaderName= "[[${_csrf.headerName}]]";
+  var csrfValue = "[[${_csrf.token}]]";
+ 
+ $(document).ready(function(){
+    $("#buttonCAncel").click(function(e){
+      e.preventDefault();
+      
+      window.location = "[[@{/orders}]]"; 
+    });
+ });
+ 
+</script>
+
+<script th:src="@{/js/common_form.js}"></script>
+<script th:src="@{/js/order_form_overview_products.js}"></script>
+<script th:src="@{/js/common_form_country_state.js}"></script>
+<script th:src="@{/js/order_form_add_product.js}"></script>
+<script th:src="@{/js/jquery.number.min.js}"></script>
+</body>
+</html>

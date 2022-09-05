@@ -1,5 +1,6 @@
 package com.shopme.admin.order;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import javax.transaction.Transactional;
@@ -11,7 +12,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.shopme.admin.country.CountryRepository;
 import com.shopme.admin.paging.PagingAndSortingHelper;
+import com.shopme.common.entity.Country;
 import com.shopme.common.entity.order.Order;
 
 @Service
@@ -21,6 +24,7 @@ public class OrderService {
 	private static final int ORDERS_PER_PAGE = 10;
 	
 	@Autowired private OrderRepository orderRepository;
+	@Autowired private CountryRepository countryRepository;
 	
 	public void listByPage(int pageNum, PagingAndSortingHelper helper) {
 		String sortField = helper.getSortField();
@@ -56,6 +60,11 @@ public class OrderService {
 			throw new OrderNotFoundException("could not find Order with ID "+ id);
 		}
 	}
+	
+	//la luste des pays
+		public List<Country> listAllCountries(){
+			return countryRepository.findAllByOrderByNameAsc();
+		}
 	
 	public void deleteOrder(Integer id) throws OrderNotFoundException {
 	    Long countById = orderRepository.countById(id);

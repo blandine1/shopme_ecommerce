@@ -63,11 +63,18 @@ public class AddressController {
 		
 		Customer customer = getAuthenticatedCustomer(request);
 		address.setCustomer(customer);
-		addressService.save(address);
+		addressService.save(address); 
+		
+		String redirectOption = request.getParameter("redirect");
+		String redirectUrl = "redirect:/address_book";
+		
+	    if("checkout".equals(redirectOption)) {
+			redirectUrl += "?redirect=checkout";
+		}
 		
 		attributes.addFlashAttribute("message", "the address has been saved successfully");
 		
-		return "redirect:/address_book";
+		return redirectUrl;
 	}
 	
 	@GetMapping("/address_book/edit/{id}")
@@ -105,6 +112,8 @@ public class AddressController {
 		
 	    if("cart".equals(redirectOption)) {
 			redirectUrl = "redirect:/cart";
+		}else  if("checkout".equals(redirectOption)) {
+			redirectUrl = "redirect:/checkout";
 		}
 		
 		return redirectUrl;

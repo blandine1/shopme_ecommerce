@@ -51,6 +51,10 @@ public class SettingService {
 	   return settingRepository.findByCategory(SettingCategory.CURRENCY);
    }
    
+   public List<Setting> getPaymentSetting() {
+	   return settingRepository.findByCategory(SettingCategory.PAYMENT);
+   }
+   
    
 
 }

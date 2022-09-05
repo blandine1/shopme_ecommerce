@@ -24,9 +24,6 @@ function loadState4Country(){
 		$.each(response, function(index, state){
 			$("<option>").val(state.id).text(state.name).appendTo(dropdownStates);
 		});
-	}).done(function(){
-		changeFormState();
-		showTostMessage("all states for "+ selectedCountry.text() +" has been loaded successfully");
 	}).fail(function(){
 		showTostMessage("ERROR: could not connect to the server or the server encountered an error while processing your request");
 	});

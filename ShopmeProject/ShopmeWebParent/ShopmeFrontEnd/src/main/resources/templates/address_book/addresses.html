@@ -5,12 +5,12 @@
 
   <div th:replace="navigation :: header_menu"></div>
   
-  <div class="container-fluid">
+  <div class="container-fluid" th:with="redirectedFromCheckOutPage = ${param.redirect != null && param.redirect[0] == 'checkout'}">
       
     <div th:replace="navigation :: search_nav"/>
       
     <div class="text-center">
-         <h3>YOUR ADDRESS BOOK</h3>
+         <h2 th:text="${redirectedFromCheckOutPage} ? 'choose another Address' : 'Your Address Book'"> </h2>
     </div>
       
     <div th:if="${message != null}" class="alert alert-success text-center">
@@ -18,7 +18,8 @@
     </div>
     
     <div class="ml-3">
-       <a th:href="@{/address_book/new}" class="h4">add new</a>
+       <a th:unless="${param.redirect}" th:href="@{/address_book/new}" class="h4">add new</a>
+       <a th:if="${redirectedFromCheckOutPage}" th:href="@{/address_book/new(redirect=checkout)}" class="h4">add new</a>
     </div>
       
       <div class="row m-1">
@@ -30,18 +31,22 @@
                            <b>your primary address</b>
                            
                            <th:block  th:if="${isPrimaryAddressAsDefault}">
-                             <span class="text-danger">[default]</span>
+                             <span class="text-danger" th:text="${redirectedFromCheckOutPage} ? '[currently selected]' : '[default]'"></span>
                            </th:block>
                            <th:block  th:unless="${isPrimaryAddressAsDefault}" th:with="p =${param.redirect}">
-                             <a th:unless="${param.redirect}" th:href="@{'/address_book/default/0'}">[set as default]</a>
-                             <a th:if="${p}" th:href="@{'/address_book/default/0?redirect=' +${p}}">[set as default]</a>
+                             <a th:unless="${p}" th:href="@{'/address_book/default/0'}">[set as default]</a>
+                             <a th:if="${p != null && p[0] == 'cart'}" th:href="@{'/address_book/default/0?redirect=cart'}">[set as default]</a>
+                             <a th:if="${p != null && p[0] == 'checkout'}" th:href="@{'/address_book/default/0?redirect=checkout'}">[choose]</a>
                            </th:block>
                            
                          </div>
                          <div class="col">
                          <div class="float-right">
-                            <a class="fas fa-edit icon-dark" title="Edit your primary address" 
+                            <a th:unless="${param.redirect}" class="fas fa-edit icon-dark" title="Edit your primary address" 
                                                                   th:href="@{/account_details(redirect=address_book)}"> </a>
+                                                                  
+                            <a th:if="${redirectedFromCheckOutPage}" class="fas fa-edit icon-dark" title="Edit your primary address" 
+                                                                  th:href="@{/account_details(redirect=checkout)}"> </a>
                          </div>
                          </div>
                      </div>
@@ -61,18 +66,22 @@
                            <b>address [[${status.count + 1}]]</b>
                            
                            <th:block  th:if="${address.defaultForShipping}">
-                             <span class="text-danger">[default]</span>
+                             <span class="text-danger" th:text="${redirectedFromCheckOutPage} ? '[currently selected]' : '[default]'"> </span>
                            </th:block>
+                           
                            <th:block  th:unless="${address.defaultForShipping}" th:with="p =${param.redirect}">
                              <a th:unless="${p}" th:href="@{'/address_book/default/' +${address.id}}">[set as default]</a>
-                             <a th:if="${p}" th:href="@{'/address_book/default/' +${address.id}} + '?redirect=' + ${p}">[set as default]</a>
+                             <a th:if="${p != null && p[0] == 'cart'}" th:href="@{'/address_book/default/' +${address.id} + '?redirect=cart'}">[set as default]</a>
+                             <a th:if="${p != null && p[0] == 'checkout'}" th:href="@{'/address_book/default/' +${address.id} + '?redirect=checkout'}">[choose]</a>
                            </th:block>
                            
                          </div>
                          <div class="col">
-                             <div class="float-right">
-                                <a class="fas fa-edit icon-dark" title="edit this address" 
+                             <div class="float-right" th:with="p =${param.redirect}">
+                                <a th:unless="${p}" class="fas fa-edit icon-dark" title="edit this address" 
                                                             th:href="@{'/address_book/edit/' + ${address.id}}"></a>
+                                 <a th:if="${p != null && p[0] == 'checkout'}" class="fas fa-edit icon-dark" title="edit this address" 
+                                                            th:href="@{'/address_book/edit/' + ${address.id} + '?redirect=checkout'}"></a>
                                     &nbsp;
                                 <a class="fas fa-trash icon-dark linkDelete" title="delete this address"
                                   th:entityId="${address.id}" th:href="@{'/address_book/delete/'+ ${address.id}}"></a>
