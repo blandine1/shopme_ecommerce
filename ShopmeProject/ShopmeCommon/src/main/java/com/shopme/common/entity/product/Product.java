@@ -19,6 +19,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.shopme.common.Constants;
 import com.shopme.common.entity.Brand;
 import com.shopme.common.entity.Category;
 import com.shopme.common.entity.IdBaseEntity;
@@ -273,7 +274,7 @@ public class Product extends IdBaseEntity{
 		if(id == null || mainImage == null) return "/images/thumbnail.png";
 		
 		
-		return "/product-images/"+ this.id + "/" + this.mainImage;
+		return  Constants.S3_BASE_URI + "/product-images/"+ this.id + "/" + this.mainImage;
 	}
 
 	//cette methode retourne si oui ou non si une image est deja dans le repertoir

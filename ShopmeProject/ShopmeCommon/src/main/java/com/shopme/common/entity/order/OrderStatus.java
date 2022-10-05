@@ -47,14 +47,21 @@ public enum OrderStatus {
   DELIVERED {
 		@Override
 		public String defaultDescription() {
-			return "Order is picked by the costomer";
+			return "Customer received  products";
+		}
+	},
+  
+  RETURN_REQUESTED {
+		@Override
+		public String defaultDescription() {
+			return "Customer send request to return purchase";
 		}
 	},
   
   RETURNED {
 		@Override
 		public String defaultDescription() {
-			return "Customer received the product";
+			return "Customer refused the product";
 		}
 	},
   

@@ -17,8 +17,9 @@
 </div>
 
 <div>
-   <form th:action="@{/orders/save}" method="post" th:object="${order}"  onsubmit="return checkUnique(this)" enctype="multipart/form-data">
+   <form th:action="@{/orders/save}" method="post" th:object="${order}" onsubmit="return processFormBeforeSubmit();" >
     <input type="hidden" th:field="*{id}" />
+     <input type="hidden" name="customerId" th:value="${order.customer.id}"/>
     
         <ul class="nav nav-tabs" id="myTab" role="tablist">
 		  <li class="nav-item">
@@ -50,7 +51,7 @@
       </div>
   
        <div class="tab-pane p-3" id="track" role="tabpanel" >
-        <h2>Edit Order Tracking</h2>
+          <div th:replace="orders/order_form_tracks :: content"></div>
        </div>
    
      </div>
@@ -90,5 +91,7 @@
 <script th:src="@{/js/common_form_country_state.js}"></script>
 <script th:src="@{/js/order_form_add_product.js}"></script>
 <script th:src="@{/js/jquery.number.min.js}"></script>
+<script th:src="@{/js/order_form_remove_product.js}"></script>
+<script th:src="@{/js/order_form_tracks.js}"></script>
 </body>
 </html>

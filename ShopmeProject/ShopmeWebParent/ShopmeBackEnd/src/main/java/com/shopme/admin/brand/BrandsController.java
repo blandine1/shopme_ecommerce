@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.shopme.admin.AmazonS3Util;
 import com.shopme.admin.FileUploadUtil;
 import com.shopme.admin.category.CategoryService;
 import com.shopme.admin.paging.PagingAndSortingHelper;
@@ -67,9 +68,13 @@ public class BrandsController {
 			 
 			 
 			 Brand savedBrand = service.save(brand);
-			 String uploadDir  = "../brand-logo/"+savedBrand.getId();
-			 FileUploadUtil.cleanDir(uploadDir);
-			 FileUploadUtil.saveFile(uploadDir, fileName, file);
+			 String uploadDir  = "brand-logo/"+savedBrand.getId();
+			 
+			 AmazonS3Util.removeFolder(uploadDir);
+			 AmazonS3Util.uploadFile(uploadDir, fileName, file.getInputStream());
+			 
+			 //FileUploadUtil.cleanDir(uploadDir);
+			 //FileUploadUtil.saveFile(uploadDir, fileName, file);
 		 }else {
 			 service.save(brand);
 		 }
@@ -103,9 +108,8 @@ public class BrandsController {
 		
 		try {
 			service.delete(id);
-			String brandDir = "../brand-logo/"+id;
-			System.out.println(brandDir);
-			FileUploadUtil.cleanDir(brandDir);
+			String brandDir = "brand-logo/"+id;
+			AmazonS3Util.removeFolder(brandDir);
 
 			
 			attributes.addFlashAttribute("message", "the brand id "+ id + " has been deleted successfully");

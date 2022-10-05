@@ -45,8 +45,6 @@ public class Customer extends AbstractAddressWithCountry{
 		this.id = id;
 	}
 
-
-
 	public String getEmail() {
 		return email;
 	}
@@ -87,8 +85,9 @@ public class Customer extends AbstractAddressWithCountry{
 		this.createdTime = createdTime;
 	}
 
+	@Transient
 	public String getFullName() {
-		return firstName + " " + lastName; 
+		return this.firstName + " " + this.lastName; 
 	}
 
 	public AuthenticationType getAuthenticationType() {

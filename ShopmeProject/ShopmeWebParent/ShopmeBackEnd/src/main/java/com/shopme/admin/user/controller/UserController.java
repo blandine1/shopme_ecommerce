@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.shopme.admin.AmazonS3Util;
 import com.shopme.admin.FileUploadUtil;
 import com.shopme.admin.paging.PagingAndSortingHelper;
 import com.shopme.admin.paging.PagingAndSortingParam;
@@ -72,9 +73,12 @@ public class UserController {
 			User savedUser =services.save(user);
 
 			String uploadDir = "user-photos/"+ savedUser.getId();
+			
+			AmazonS3Util.removeFolder(uploadDir);
+			AmazonS3Util.uploadFile(uploadDir, fileName, multipartFile.getInputStream());
 
-			FileUploadUtil.cleanDir(uploadDir);
-			FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+			//FileUploadUtil.cleanDir(uploadDir);
+			//FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
 		}else {
 			if(user.getPhotos().isEmpty())
 				user.setPhotos(null);
@@ -114,8 +118,11 @@ public class UserController {
 
 		try {
 			services.deleteById(id);
-			String deletDir = "user-photos/"+id;
-			FileUploadUtil.cleanDir(deletDir);
+			String deletPhotoDir = "user-photos/"+id;
+			
+			AmazonS3Util.removeFolder(deletPhotoDir);
+			
+			//FileUploadUtil.cleanDir(deletDir);
 			
 			attributes.addFlashAttribute("message", "user with id "+ id +" is deleted successfully");
 		} catch (UserNotFountException ex) {

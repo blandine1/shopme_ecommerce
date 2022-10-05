@@ -13,6 +13,8 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.shopme.common.Constants;
+
 @Entity
 @Table(name = "categories")
 public class Category extends IdBaseEntity{
@@ -164,7 +166,7 @@ public class Category extends IdBaseEntity{
 	@Transient
 	public String getImagePath() {
 		if(this.id == null) return "/images/thumbnail.png";
-		return "/category-image/"+this.id +"/"+this.image;
+		return  Constants.S3_BASE_URI + "/category-image/"+this.id +"/"+this.image;
 	}
 
 	public boolean isHasChildren() {

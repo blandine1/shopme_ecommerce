@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.shopme.admin.AmazonS3Util;
 import com.shopme.admin.FileUploadUtil;
+import com.shopme.common.Constants;
 import com.shopme.common.entity.Currency;
 import com.shopme.common.entity.setting.Setting;
 
@@ -40,6 +42,8 @@ public class SettingController {
 		for(Setting setting : listSettings) {
 			model.addAttribute(setting.getKey(), setting.getValue());
 		}
+		
+		model.addAttribute("S3_BASE_URI",Constants.S3_BASE_URI);
 		
 		return "settings/settings";
 	}
@@ -68,9 +72,14 @@ public class SettingController {
 			
 			generalSetting.updateSiteLogo(value);
 			
-			String uploadDir = "../site-logo";
-			FileUploadUtil.cleanDir(uploadDir);
-			FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+			String uploadDir = "site-logo";
+			
+			AmazonS3Util.removeFolder(uploadDir);
+			AmazonS3Util.uploadFile(uploadDir, fileName, multipartFile.getInputStream());
+			
+			//before integrate amazone 
+			//FileUploadUtil.cleanDir(uploadDir);
+			//FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
 		}
 	}
 	

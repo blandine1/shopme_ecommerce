@@ -44,6 +44,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 	   http.authorizeRequests()
+	       .antMatchers("/states/list_by_country/**").hasAnyAuthority("Admin","Salesperson")
 	       .antMatchers("/users/**", "/settings/**", "/states/**","/countries/**").hasAuthority("Admin")
 	       .antMatchers("/categories/**", "/brands/**").hasAnyAuthority("Admin","Editor")
 	       
@@ -52,7 +53,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	       .antMatchers("/products", "/products/", "/products/page/**", "/products/details/**")
 	          .hasAnyAuthority("Admin", "Editor", "Salesperson", "Shipper")
 	       .antMatchers("/products/**").hasAnyAuthority("Admin", "Editor")
+	       .antMatchers("/orders","/orders/", "/orders/page/**","/orders/detail/**").hasAnyAuthority("Admin", "Salesperson","Shipper")
 	       .antMatchers("/customer/**", "/orders/**", "/get_shipping_cost").hasAnyAuthority("Admin", "Salesperson")
+	       .antMatchers("/orders_shipper/update/**").hasAuthority("Shipper")
 	       
 	       .anyRequest()
 	       .authenticated()

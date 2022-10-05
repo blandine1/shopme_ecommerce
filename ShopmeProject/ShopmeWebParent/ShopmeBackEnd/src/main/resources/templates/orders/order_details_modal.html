@@ -30,7 +30,7 @@
 			    </div>
 			  </div>
 			  
-			  
+			   <th:block th:if="${isVisibleForAdminAndSalesperson}">
 				  <div class="form-group row">
 				    <label class="col-sm-2 col-form-label">customer</label>
 				    <div class="col-sm-10">
@@ -61,7 +61,8 @@
 				      <div th:replace="fragments :: currency_input(${order.tax})">Tax</div>
 				    </div>
 				  </div>
-			  			  
+			  </th:block>
+			  	  
 			  <div class="form-group row">
 			    <label class="col-sm-2 col-form-label">Total</label>
 			    <div class="col-sm-10">
@@ -69,13 +70,14 @@
 			    </div>
 			  </div>
 			  
+			  <th:block th:if="${isVisibleForAdminAndSalesperson}">
 				  <div class="form-group row">
 				    <label class="col-sm-2 col-form-label"></label>
 				    <div class="col-sm-10">
 				     Total = Subtotal + Shipping cost
 				    </div>
 				  </div>
-			  
+			  </th:block>
 			  			  
 			  <div class="form-group row">
 			    <label class="col-sm-2 col-form-label">Payment Method</label>
@@ -113,7 +115,7 @@
 						<b>[[${product.name}]]</b>
 					</div>
 					
-					
+					 <th:block th:if="${isVisibleForAdminAndSalesperson}">
 						<div>
 							Product cost : <div th:replace="fragments :: format_currency(${detail.productCost})" />
 						</div>
@@ -126,6 +128,7 @@
 						<div>
 							Shipping cost : <div th:replace="fragments :: format_currency(${detail.shippingCost})" />
 						</div>
+					</th:block>
 									
 				</div>
 			</div>

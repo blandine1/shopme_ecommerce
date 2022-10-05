@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.shopme.admin.AmazonS3Util;
 import com.shopme.admin.FileUploadUtil;
 import com.shopme.common.entity.product.Product;
 import com.shopme.common.entity.product.ProductImage;
@@ -22,25 +24,18 @@ public class ProductSaveHelper {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProductSaveHelper.class);
 	
 	static void deleteExtraImageRemoveInForm(Product product) {
-		String imageDir = "../product-images/"+product.getId()+"/extras";
-		Path dirPath = Paths.get(imageDir);
+		String imageDir = "product-images/"+product.getId()+"/extras";
+        List<String> listObjetKeys = AmazonS3Util.listFolder(imageDir);		
 		
-		try{
-			Files.list(dirPath).forEach(file ->{
-				String fileName = file.toFile().getName();
-				
-				if(!product.containImageName(fileName)) {
-					try {
-						Files.delete(file);
-						LOGGER.info("deleted extraImage "+ fileName);
-					}catch (IOException e) {
-						LOGGER.error("could not delete extra image "+ fileName);
-					}
-				}
-			});
-		}catch (IOException e) {
-			LOGGER.error("could not delete directory "+ dirPath);
-		}
+          for(String objectKey: listObjetKeys) {
+        	  int lastIndexOfSlash = objectKey.lastIndexOf("/");
+        	  String fileName = objectKey.substring(lastIndexOfSlash + 1, objectKey.length());
+        	  
+        	  if(!product.containImageName(fileName)) {
+        		  AmazonS3Util.deleteFile(objectKey);
+        		  System.out.print("deleted extra image : " + objectKey);
+        	  }
+          }
 	}
 
 	static void setExistingExtraImageNames(String[] imageIDs, String[] imageNames, Product product) {
@@ -84,19 +79,31 @@ public class ProductSaveHelper {
 		
 		if(!mainImageMultiPart.isEmpty()) {
 			String fileName = StringUtils.cleanPath(mainImageMultiPart.getOriginalFilename().replace(" ", "_"));
-		  String uploadDir = "../product-images/"+ savedProduct.getId();
-		
-		  FileUploadUtil.cleanDir(uploadDir);
-		  FileUploadUtil.saveFile(uploadDir, fileName, mainImageMultiPart);
+		    String uploadDir = "product-images/"+ savedProduct.getId();
+		    
+		    List<String> listObjectKeys = AmazonS3Util.listFolder(uploadDir + "/");
+		    for(String objectKey : listObjectKeys) {
+		    	if(!objectKey.contains("/extras/")) {
+		    		AmazonS3Util.deleteFile(objectKey);
+		    	}
+		    }
+		  
+		 
+	      AmazonS3Util.uploadFile(uploadDir, fileName, mainImageMultiPart.getInputStream());
+		  
+		  //FileUploadUtil.cleanDir(uploadDir);
+		  //FileUploadUtil.saveFile(uploadDir, fileName, mainImageMultiPart);
 		}
 		
 		if(extraImageMultipart.length > 0) {
-			 String uploadDir = "../product-images/"+ savedProduct.getId() + "/extras";
+			 String uploadDir = "product-images/"+ savedProduct.getId() + "/extras";
 			for(MultipartFile multipartFile : extraImageMultipart) {
 				if(multipartFile.isEmpty()) continue;
 				
 				String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename().replace(" ", "_"));
-				FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+				 AmazonS3Util.uploadFile(uploadDir, fileName, multipartFile.getInputStream());
+				
+				 //FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
 			}
 		}
 	

@@ -18,7 +18,7 @@ import com.shopme.common.exception.ProductNotFountException;
 @Service
 @Transactional
 public class ProductService {
-	public final static int PRODUCT_PER_PAGE = 5;
+	public  static final int PRODUCT_PER_PAGE = 5;
 	@Autowired
 	private ProductRepository repository;
 	
@@ -26,26 +26,27 @@ public class ProductService {
 		return (List<Product>) repository.findAll();
 	}
 	
-	public void listByPage(int pageNum, PagingAndSortingHelper helper, Integer categoryId){
-		Pageable pageable = helper.createPageable(PRODUCT_PER_PAGE, pageNum );
+public void listByPage(int pageNum, PagingAndSortingHelper helper, Integer categoryId) {
+		
+		Pageable pageable = helper.createPageable(pageNum,PRODUCT_PER_PAGE);
 		String keyword = helper.getKeyword();
-		
-		Page<Product> page= null;
-		
-		if(keyword != null && !keyword.isEmpty()){
-			if(categoryId != null && categoryId > 0) {
-				String categoryMatch = "-"+ String.valueOf(categoryId)+ "-";
-				page =  repository.searchInCategory(categoryId, categoryMatch, keyword, pageable);
-			}else {
-				page = repository.findAll(keyword ,pageable);
+		Page<Product> page = null;
+
+		if (keyword != null && !keyword.isEmpty()) {
+			
+			if (categoryId != null && categoryId > 0) {
+				String categoryIdMatch = "-" + String.valueOf(categoryId) + "-";
+				page = repository.searchInCategory(categoryId, categoryIdMatch, keyword, pageable);
+			} else {
+				page = repository.findAll(keyword, pageable);
 			}
-		}else {
-			if(categoryId != null && categoryId > 0) {
-				String categoryMatch = "-" +String.valueOf(categoryId)+ "-";
-			    page = repository.findAllInCtegory(categoryId, categoryMatch, pageable);
-		    }else {
-		    	page = repository.findAll(pageable);
-		    }
+		} else {
+			if (categoryId != null && categoryId > 0) {
+				String categoryIdMatch = "-" + String.valueOf(categoryId) + "-";
+				page = repository.findAllInCtegory(categoryId, categoryIdMatch, pageable);
+			} else {		
+				page = repository.findAll(pageable);
+			}
 		}
 		
 		helper.updateModelAttributes(pageNum, page);

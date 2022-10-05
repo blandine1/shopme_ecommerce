@@ -46,21 +46,22 @@ public class ProductController {
 	}
 	
 	@GetMapping("/products/page/{pageNum}")
-	public String listByPage(@PagingAndSortingParam(listName ="listProducts", moduleUrl="/products" ) PagingAndSortingHelper helper,
-			                 @PathVariable("pageNum") int pageNum, Model model,
-			                 @Param("categoryId") Integer categoryId
-			                 ) {
+	public String listByPage(
+			@PagingAndSortingParam(listName = "listProducts", moduleUrl = "/products") PagingAndSortingHelper helper,
+			@PathVariable(name = "pageNum") int pageNum, Model model,
+			@RequestParam("categoryId") Integer categoryId
+			) {
 		
-		System.out.println("seletcted Id category " +categoryId);
+		
 		service.listByPage(pageNum, helper, categoryId);
 		
-		List<Category> listCategories = categoryService.listCategoriesUsedInForm();
+		List<Category> listCategories = categoryService.listCategoriesUsedInForm();	
 		
-		if(categoryId != null) model.addAttribute("categoryId", categoryId);
+		if (categoryId != null) model.addAttribute("categoryId", categoryId);
 		model.addAttribute("listCategories", listCategories);
-		
-		
-		return "products/products";
+	
+
+		return "products/products";	
 	}
 	
 	@GetMapping("/products/new")

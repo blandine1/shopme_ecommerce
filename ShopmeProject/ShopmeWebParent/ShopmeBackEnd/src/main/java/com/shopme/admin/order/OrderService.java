@@ -1,5 +1,6 @@
 package com.shopme.admin.order;
 
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -16,6 +17,9 @@ import com.shopme.admin.country.CountryRepository;
 import com.shopme.admin.paging.PagingAndSortingHelper;
 import com.shopme.common.entity.Country;
 import com.shopme.common.entity.order.Order;
+import com.shopme.common.entity.order.OrderStatus;
+import com.shopme.common.entity.order.OrderTrack;
+import com.shopme.common.exception.OrderNotFoundException;
 
 @Service
 @Transactional
@@ -73,6 +77,37 @@ public class OrderService {
 	    }
 	    
 	    orderRepository.deleteById(id);
+	}
+ 
+	public void save(Order orderInForm) {
+		Order orderInDB = orderRepository.findById(orderInForm.getId()).get();
+		orderInForm.setOrderTime(orderInDB.getOrderTime());
+		orderInForm.setCustomer(orderInDB.getCustomer());
+		
+		System.out.println("////////////////////// "+ orderInForm);
+		orderRepository.save(orderInForm);
+		
+	}
+	
+	public void updateStatus(Integer orderId, String status) {
+		Order orderInDb = orderRepository.findById(orderId).get();
+		OrderStatus statusToUpdate = OrderStatus.valueOf(status);
+		
+		if(!orderInDb.hasStatus(statusToUpdate)) {
+			List<OrderTrack> orderTracks = orderInDb.getOrderTracks();
+			
+			OrderTrack track = new OrderTrack();
+			track.setOrder(orderInDb);
+			track.setStatus(statusToUpdate);
+			track.setUpdatedTime(new Date());
+			track.setNotes(statusToUpdate.defaultDescription());
+			
+			orderTracks.add(track);
+			
+			orderInDb.setStatus(statusToUpdate);
+			
+			orderRepository.save(orderInDb);
+		}
 	}
 
 }

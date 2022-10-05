@@ -1,4 +1,8 @@
+var productDetailCount;
+
 $(document).ready(function(){
+	
+	productDetailCount = $(".hiddenProductId").length;
     $("#products").on("click", "#linkAddProduct", function(e){
 	  e.preventDefault();
 	  link = $(this);
@@ -61,23 +65,32 @@ function getProductInfo(productId, shippingCost){
 		htmlCode = generateProductCode(productId, productName, mainImagePath,shippingCost, productCost, productPrice);
         $("#productList").append(htmlCode);
         
+        updateOrderAmounts();
+        
 	}).fail(function(err){
 		showWarningModal(err.responseJSON.message);
 	});
 }
 
 function generateProductCode(productId, productName, mainImagePath, shippingCost, productCost, productPrice){
-	nextCount = $(".hiddenProductId").length + 1;
+	
+	nextCount = productDetailCount + 1;
+	productDetailCount++;
+	
 	quantityId = "quantity" + nextCount;
 	priceId = "price" + nextCount;
+	rowId = "row" + nextCount;
 	subtotalId = "subtotal" + nextCount;
+	blankLineId= "blankLine" + nextCount;
 	
 	htmlCode = `
-	         <div class="border rounded">
+	         <div class="border rounded" id="${rowId}">
+	       <input type="hidden" name="detailId" value="0"/>
            <input type="hidden" name="productId" value="${productId}" class="hiddenProductId"/>
              <div class="row">
                <div class="col-1 ml-1">
-                  <div>${nextCount}</div>
+                  <div class="divCount">${nextCount}</div>
+                   <div> <a class="fas fa-trash icon-dark linkRemove" href=""  rowNumber="${nextCount}"></a> </div>
                </div>
                <div class="col-3 pt-1">
                   <img  src="${mainImagePath}" class="img-fluid" />
@@ -93,7 +106,8 @@ function generateProductCode(productId, productName, mainImagePath, shippingCost
                   <tr>
                      <td>Product coast : </td>
                      <td>
-                       <input type="text" required class="form-control  cost-input" 
+                       <input type="text" required class="form-control  cost-input"
+                              name="productDetailCost" 
                               rowNumber="${nextCount}" 
                               value="${productCost}" style="max-width: 140px"/>
                      </td>
@@ -102,6 +116,7 @@ function generateProductCode(productId, productName, mainImagePath, shippingCost
                      <td>Quantity : </td>
                      <td>
                        <input type="number" step="1" min="1" mx="5" required class="form-control quantity-input"
+                             name="quantity" 
                              rowNumber="${nextCount}" 
                              id="${quantityId}"
                              value="1" style="max-width: 140px"/>
@@ -110,7 +125,8 @@ function generateProductCode(productId, productName, mainImagePath, shippingCost
                   <tr>
                      <td>Unit Price : </td>
                      <td>
-                       <input type="text" required class="form-control price-input" 
+                       <input type="text" required class="form-control price-input"
+                              name="productPrice"  
                              id="${priceId}"
                              rowNumber="${nextCount}" 
                              value="${productPrice}" style="max-width: 140px"/>
@@ -120,6 +136,7 @@ function generateProductCode(productId, productName, mainImagePath, shippingCost
                      <td>SubTotal : </td>
                      <td>
                        <input type="text" readonly class="form-control subtotal-output"
+                              name="productSubtotal" 
                              id="${subtotalId}" 
                              value="${productPrice}" style="max-width: 140px"/>
                      </td>
@@ -127,7 +144,8 @@ function generateProductCode(productId, productName, mainImagePath, shippingCost
                   <tr>
                      <td>Shipping cost : </td>
                      <td>
-                       <input type="text" required class="form-control ship-input" 
+                       <input type="text" required class="form-control ship-input"
+                         name="productShipCost"  
                              value="${shippingCost}" style="max-width: 140px" />
                      </td>
                   </tr>
@@ -135,7 +153,7 @@ function generateProductCode(productId, productName, mainImagePath, shippingCost
              </div>
 
            </div>
-           <div>&nbsp;</div>
+           <div id="${blankLineId}">&nbsp;</div>
 	`;
 	
 	return htmlCode;

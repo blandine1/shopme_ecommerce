@@ -25,6 +25,6 @@ function loadState4Country(){
 			$("<option>").val(state.id).text(state.name).appendTo(dropdownStates);
 		});
 	}).fail(function(){
-		showTostMessage("ERROR: could not connect to the server or the server encountered an error while processing your request");
+		showToastMessage("ERROR: could not connect to the server or the server encountered an error while processing your request");
 	});
 }

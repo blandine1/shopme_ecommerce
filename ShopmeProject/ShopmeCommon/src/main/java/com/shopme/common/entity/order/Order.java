@@ -1,6 +1,7 @@
 package com.shopme.common.entity.order;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -57,10 +58,10 @@ public class Order extends AbstractAddress{
 	@JoinColumn(name = "customer_id")
 	private Customer customer;
 	
-	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<OrderDetail>orderDetails =new HashSet<>();//retourne une lite desordonnée
 
-	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
 	@OrderBy("updatedTime Asc")
 	private List<OrderTrack>orderTracks = new ArrayList<>();//maintient l'ordre des elements a l'appel
 
@@ -192,7 +193,7 @@ public class Order extends AbstractAddress{
 	@Override
 	public String toString() {
 		return "Order [id=" + id + ", subtotal=" + subtotal + ", paymentMethod=" + paymentMethod + ", status=" + status
-				+ ", customer=" + customer.getFullName() + "]";
+				+ ", customer=[" + customer + "]"+"]";
 	}
 	
 	@Transient
@@ -222,13 +223,13 @@ public class Order extends AbstractAddress{
 	public String getShippingAddress (){
         String address = firstName;
 		
-		if(lastName != null && !lastName.isEmpty()) address += " " +lastName;
+		if(lastName != null && !lastName.isEmpty()) address += ", " +lastName;
 		if(!addressLine1.isEmpty()) address += ", " +addressLine1;
 		if(addressLine2 != null && !addressLine2.isEmpty())  address += ", " +addressLine2;
 		if(!city.isEmpty())  address += ", " +city;
 		if(state != null && !state.isEmpty())  address += ", " +state;
 		if(!postalCode.isEmpty()) address += ". Postal code: " +postalCode;
-		if(!phoneNumber.isEmpty()) address += ". Phone number : " +phoneNumber +" ";
+		if(!phoneNumber.isEmpty()) address += ". Phone number : " +phoneNumber +", ";
 		
 		
 		address += country;
@@ -242,6 +243,102 @@ public class Order extends AbstractAddress{
     	DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     	return dateFormat.format(this.deliverDate);
     }
+    
+    public void setDeliverDateOnForm(String dateString) {
+    	DateFormat dateFormat = new SimpleDateFormat("yyy-MM-dd");
+    	try {
+			this.deliverDate = dateFormat.parse(dateString);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+    }
+    
+    @Transient
+  	public String getRecipientName(){
+          String name = firstName;
+  		
+  		if(lastName != null && !lastName.isEmpty()) name += " " +lastName;
 	
+  		return name;
+    }
+    
+    @Transient
+ 	public String getRecipientAddress (){
+         String address = addressLine1;
+ 		
+ 		if(addressLine2 != null && !addressLine2.isEmpty())  address += ", " +addressLine2;
+ 		if(!city.isEmpty())  address += ", " +city;
+ 		if(state != null && !state.isEmpty())  address += ", " +state;
+ 		if(!postalCode.isEmpty()) address += ". " +postalCode; 		
+ 		
+ 		address += country;
+ 		
+ 		
+ 		return address;
+ 	}
+    
+    @Transient
+    public boolean isCOD() {
+    	return paymentMethod.equals(PaymentMethod.COD);
+    }
+    
+    @Transient
+    public boolean isPicked() {
+    	return hasStatus(OrderStatus.PICKED);
+    }
+    
+    @Transient
+    public boolean isProcessing() {
+    	return hasStatus(OrderStatus.PROCESSING);
+    }
+    
+    @Transient
+    public boolean isShipping() {
+    	return hasStatus(OrderStatus.SHIPPING);
+    }
+    
+    @Transient
+    public boolean isDelivered() {
+    	return hasStatus(OrderStatus.DELIVERED);
+    }
+    
+    @Transient
+    public boolean isNew() {
+    	return hasStatus(OrderStatus.NEW);
+    }
+    
+    @Transient
+    public boolean isReturned() {
+    	return hasStatus(OrderStatus.RETURNED);
+    }
+    
+    @Transient
+    public boolean isReturnRequested() {
+    	return hasStatus(OrderStatus.RETURN_REQUESTED);
+    }
+ 
+    public boolean hasStatus(OrderStatus status) {
+    	for(OrderTrack aTrack: orderTracks) {
+    		if(aTrack.getStatus().equals(status)) {
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+    
+    @Transient
+    public String getProductNames() {
+    	String productNames = "";
+    	
+    	productNames = "<ul>";
+    	
+    	for(OrderDetail detail: orderDetails) {
+    		productNames += "<li>" + detail.getProduct().getShortName() + "</li>";
+    	}
+    	
+    	productNames += "</ul>";
+    	
+    	return productNames;
+    }
 	
 }

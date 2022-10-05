@@ -25,13 +25,13 @@ public class AbstractAddressWithCountry extends AbstractAddress{
 	public String toString() {
         String address = firstName;
 		
-		if(lastName != null && !lastName.isEmpty()) address += " " +lastName;
+		if(lastName != null && !lastName.isEmpty()) address += ", " +lastName;
 		if(!addressLine1.isEmpty()) address += ", " +addressLine1;
 		if(addressLine2 != null && !addressLine2.isEmpty())  address += ", " +addressLine2;
 		if(!city.isEmpty())  address += ", " +city;
 		if(state != null && !state.isEmpty())  address += ", " +state;
-		if(!postalCode.isEmpty()) address += ". Postal code: " +postalCode;
-		if(!phoneNumber.isEmpty()) address += ". Phone number : " +phoneNumber +" ";
+		if(!postalCode.isEmpty()) address += ", " +postalCode;
+		if(!phoneNumber.isEmpty()) address += ", " +phoneNumber +", ";
 		
 		
 		address += country.getName();

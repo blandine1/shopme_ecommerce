@@ -7,31 +7,31 @@
       <div class="form-group row">
         <label class="col-sm-2 col-form-label">Deliver days</label>
         <div class="col-sm-10">
-         <input type="text"class="form-control" th:value="*{deliverDays}" required/>
+         <input type="text"class="form-control" th:field="*{deliverDays}" required/>
         </div>
       </div>
       <div class="form-group row">
         <label class="col-sm-2 col-form-label">Expected deliver days</label>
         <div class="col-sm-10">
-         <input type="date"class="form-control" th:value="*{deliverDateOnForm}" required/>
+         <input type="date"class="form-control" th:field="*{deliverDateOnForm}" required/>
         </div>
       </div>
       <div class="form-group row">
         <label class="col-sm-2 col-form-label">First name</label>
         <div class="col-sm-10">
-         <input type="text"class="form-control" th:value="*{firstName}" required/>
+         <input type="text"class="form-control" th:field="*{firstName}" required/>
         </div>
       </div>
       <div class="form-group row">
         <label class="col-sm-2 col-form-label">last name</label>
         <div class="col-sm-10">
-         <input type="text"class="form-control" th:value="*{lastName}" required/>
+         <input type="text"class="form-control" th:field="*{lastName}" required/>
         </div>
       </div>
       <div class="form-group row">
         <label class="col-sm-2 col-form-label">phone number</label>
         <div class="col-sm-10">
-         <input type="text"class="form-control" th:value="*{phoneNumber}" required/>
+         <input type="text"class="form-control" th:field="*{phoneNumber}" required/>
         </div>
       </div>
       <div class="form-group row">
@@ -56,6 +56,7 @@
       <div class="form-group row">
         <label class="col-sm-2 col-form-label">Country</label>
         <div class="col-sm-10">
+        <input type="hidden" name="countryName" id="countryName" th:value="${order.country}"/>
           <select class="form-control" id="country">
             <option th:each="aCountry : ${listCountries}" th:value="${aCountry.id}" th:selected="${aCountry.name== order.country}">[[${aCountry.name}]]</option>
           </select>
