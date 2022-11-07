@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments :: page_head('Customers - Shopme Admin','none')"/>
+<body>
+
+<div th:replace="navigation :: menu"></div>
+
+<div class="container-fluid">
+
+<div>
+    <h1>manage customers</h1>
+    <a th:href="@{/customer/new}" class="fas fa-user-plus fa-2x icon-dark" title="add new customer"> </a>
+    &nbsp; | &nbsp;
+    <a th:href="@{/customers/export/csv}" class="fas fa-file-csv fa-2x icon-dark" title="fichier csv"></a>
+    &nbsp; | &nbsp;
+    <a th:href="@{/customers/export/excel}" class="fas fa-file-excel fa-2x icon-dark"  title="fichier excel"></a>
+    &nbsp; | &nbsp;
+    <a th:href="@{/customers/export/pdf}"  class="fas fa-file-pdf fa-2x icon-dark" title="fichier pdf"></a>
+</div>
+
+
+<div th:replace="fragments :: search_form_and_message"/>
+
+<div class="full-details">
+    <table class="table table-striped table-hover table-bordered">
+         <thead class="thead-dark">
+         <tr>
+            <th class="hideable-column">
+              <th th:replace="fragments :: column_link('id', 'ID', 'tag')" />
+            </th>
+            
+           <th th:replace="fragments :: column_link('firstName', 'First Name', 'none')" />
+           <th th:replace="fragments :: column_link('lastName', 'Last Name', 'none')" />
+           
+           <th class="hideable-column">
+             <th th:replace="fragments :: column_link('email', 'Email', 'tag')" />
+           </th>
+           
+           <th th:replace="fragments :: column_link('city', 'City', 'none')" />
+           <th th:replace="fragments :: column_link('state', 'State', 'none')" />
+           <th th:replace="fragments :: column_link('country', 'Country', 'none')" />
+           
+           <th th:replace="fragments :: column_link('enabled', 'Satut', 'none')" />
+           <th>actions</th>
+           </tr>
+         </thead>
+         <tbody>
+            <tr th:each="c : ${listCustomers}">
+               <td class="hideable-column">[[${c.getId}]]</td>
+               <td>[[${c.getFirstName}]]</td>
+               <td>[[${c.getLastName}]]</td>
+               <td class="hideable-column">[[${c.getEmail}]]</td>
+               <td>[[${c.city}]]</td>
+               <td>[[${c.state}]]</td>
+               <td>[[${c.country.name}]]</td>
+               <td>
+                    <div th:replace="fragments :: status(${c.enabled}, 'customer', '/customers/'+${c.id})"/>
+               </td>
+               <td>
+               <a th:href="@{'/customers/detail/' +${c.id}}" class="fas fa-file-alt fa-2x icon-green link-detail" 
+                  title="detail de ce client"></a>
+                &nbsp; &nbsp;
+                  <div th:replace="fragments :: edit('customer', '/customers/edit/'+${c.id})"/>
+                   &nbsp; &nbsp;
+                  <div th:replace="fragments :: delete('customer', ${c.id}, '/customers/delete/'+${c.id}, true)"/>
+               </td>
+            </tr>
+         </tbody>
+    </table>
+</div>
+
+<div class="less-details">
+  <div th:each="c : ${listCustomers}" class="row m-1">
+      <div class="col-4">
+         
+      </div>
+      <div class="col-8">
+        <div>[[${c.firstName}]]</div>
+        
+        <div class="p-2">
+        
+          <div th:replace="fragments :: status(${c.enabled}, 'customer', '/customers/'+${c.id})"/>
+            &nbsp;
+          <a th:href="@{'/customers/detail/' +${c.id}}" class="fas fa-file-alt fa-2x icon-green link-detail" title="detail de ce client"></a>
+             &nbsp; &nbsp;
+          <div th:replace="fragments :: edit('customer', '/customers/edit/'+${c.id})"/>
+           &nbsp; &nbsp;
+          <div th:replace="fragments :: delete('customer',${c.id}, '/customers/delete/'+${c.id}, true)"/>
+        </div>
+      </div>
+  </div>
+</div>
+  
+
+<div th:replace="fragments :: pagination('customers')"></div>
+
+<div th:replace="modal_fragments :: confirm_modal"/>
+
+<div th:replace="fragments :: footer"/>
+
+<div class="modal fade" id="detailModal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+    
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script th:src="@{/js/common_list.js}"></script>
+<script type="text/javascript">
+moduleUrl = "[[@{/customers}]]";
+
+handleDefaultDetailLinkClick();
+ 
+</script>
+</body>
+</html>
