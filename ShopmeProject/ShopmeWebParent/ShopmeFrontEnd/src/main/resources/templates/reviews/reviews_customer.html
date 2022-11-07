@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments :: page_head('review- Shopme Admin','none')"/>
+<body>
+
+<div th:replace="navigation :: header_menu"></div>
+<div th:replace="navigation :: search_nav"></div>
+
+<div class="container-fluid">
+
+<div>
+    <h1>my reviews</h1>
+</div>
+
+
+
+   <form th:action="@{'/reviews/page/1'}" class="form-inline m-3">
+     <input type="hidden" name="sortField" th:value="${sortField}" />
+     <input type="hidden" name="sortDir" th:value="${sortDir}" />
+     
+      <input type="search" name="keyword" th:value="${keyword}" class="form-control" required />
+      &nbsp;
+      <button type="submit" class="btn btn-primary">
+         <i class="fas fa-search"></i>
+      </button>
+      &nbsp;
+      <button type="button" class="btn btn-secondary" onclick="clearFilter()">
+        <i class="fas fa-eraser"></i>
+      </button>
+   </form>
+
+
+<div class="full-details">
+    <table class="table table-striped table-hover table-bordered">
+         <thead class="thead-dark">
+         <tr>
+            
+             <th th:replace="fragments :: column_link('id', 'ID', 'none')"/>
+             <th th:replace="fragments :: column_link('product', 'Product', 'none')"/>
+             <th th:replace="fragments :: column_link('headline', 'Headline', 'none')"/>
+             <th th:replace="fragments :: column_link('rating', 'Rating', 'none')"/>
+             <th th:replace="fragments :: column_link('reviewTime', 'Review Time', 'none')"/>
+             <th>actions</th>
+           </tr>
+         </thead>
+         <tbody>
+            <tr th:each="review : ${listReviews}">
+               <td>[[${review.id}]]</td>
+               <td>
+                   <a th:href="@{'/p/' + ${review.product.alias}}" target="_blank">
+                     [[${review.product.shortName}]]
+                   </a>
+               </td>
+               <td> [[${review.headline}]]</td>
+               <td>[[${review.rating}]] <i class="far fa-star"></i> </td>
+               <td>[[${review.reviewTime}]]</td>
+               <td>
+                 <a class="fas fa-file-alt fa-2x icon-green link-detail-review" 
+                    th:href="@{'/reviews/detail/'+ ${review.id}}"
+                     title="view this review">
+                  </a>
+               </td>
+            </tr>
+         </tbody>
+    </table>
+</div>
+
+
+<div class="less-details">
+  <div th:each="review  : ${listReviews}" class="row m-1">
+      <div class="col-4">
+         <span>[[${review.id}]]</span>
+      </div>
+      <div class="col-8">
+        <div class="mb-1">
+           <span>[[${review.product.shortName}]]</span>
+        </div>
+        <div>
+          &nbsp;
+             <span>[[${review.rating}]] <i class="far fa-star"></i> </span>
+          &nbsp;
+           <a class="fas fa-file-alt fa-2x icon-green link-detail-review" 
+               th:href="@{'/reviews/detail/'+ ${review.id}}"
+               title="view this review">
+           </a>
+        </div>
+      </div>
+       <div>&nbsp;</div>
+  </div>
+</div>
+  
+
+<div th:replace="fragments :: pagination('/reviews', 'reviews')"/>
+
+<div class="modal fade" id="reviewDetailModal">
+    <div class="modal-dialog modal-lg">
+       <div class="modal-content">
+       </div>
+</div>
+</div>
+
+</div>
+
+<script th:src="@{/js/common_list.js}"></script>
+<script type="text/javascript">
+moduleUrl = "[[@{/reviews}]]";
+
+ $(document).ready(function(){
+    handleDetailLink(".link-detail-review", "#reviewDetailModal");
+ });
+ 
+</script>
+</body>
+</html>
